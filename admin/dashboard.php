@@ -36,7 +36,7 @@ $songs = db()->query('SELECT id, title, artist, price, created_at FROM songs ORD
                             <th>Title</th>
                             <th>Artist</th>
                             <th>Price</th>
-                            <th>Uploaded</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +45,13 @@ $songs = db()->query('SELECT id, title, artist, price, created_at FROM songs ORD
                                 <td><?= htmlspecialchars($song['title']) ?></td>
                                 <td><?= htmlspecialchars($song['artist']) ?></td>
                                 <td>$<?= number_format((float)$song['price'], 2) ?></td>
-                                <td><?= htmlspecialchars($song['created_at']) ?></td>
+                                <td class="actions">
+                                    <a href="/admin/edit.php?id=<?= $song['id'] ?>" class="btn small">Edit</a>
+                                    <form method="post" action="/admin/delete.php" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                        <input type="hidden" name="id" value="<?= $song['id'] ?>">
+                                        <button type="submit" class="btn small danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

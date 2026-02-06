@@ -12,6 +12,7 @@ CREATE TABLE songs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     artist VARCHAR(200) NOT NULL,
+    cover_path VARCHAR(255) DEFAULT NULL,
     price DECIMAL(10,2) NOT NULL,
     file_path VARCHAR(255) NOT NULL,
     preview_path VARCHAR(255) NOT NULL,

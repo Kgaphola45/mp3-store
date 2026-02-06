@@ -23,29 +23,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $songFile = $_FILES['song'];
         $previewFile = $_FILES['preview'];
+        $coverFile = $_FILES['cover'] ?? null;
 
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $songMime = $finfo->file($songFile['tmp_name']);
         $previewMime = $finfo->file($previewFile['tmp_name']);
+        
+        $hasCover = isset($coverFile) && $coverFile['error'] === UPLOAD_ERR_OK;
+        $coverMime = $hasCover ? $finfo->file($coverFile['tmp_name']) : null;
 
-        if ($songMime !== 'audio/mpeg' || $previewMime !== 'audio/mpeg') {
-            $error = 'Files must be MP3 (audio/mpeg).';
+        if ($songMime !== 'audio/mpeg' && $songMime !== 'audio/mp3') { // loosen check slightly if needed, but strict mime is better
+             $error = 'Song must be MP3 (audio/mpeg). Detected: ' . $songMime;
+        } elseif ($previewMime !== 'audio/mpeg' && $previewMime !== 'audio/mp3') {
+             $error = 'Preview must be MP3 (audio/mpeg).';
+        } elseif ($hasCover && !in_array($coverMime, ['image/jpeg', 'image/png', 'image/webp'])) {
+             $error = 'Cover must be JPG, PNG, or WebP.';
         } else {
             $songName = 'song_' . bin2hex(random_bytes(8)) . '.mp3';
             $previewName = 'preview_' . bin2hex(random_bytes(8)) . '.mp3';
+            $coverName = null;
+
+            if ($hasCover) {
+                $ext = match($coverMime) {
+                    'image/jpeg' => '.jpg',
+                    'image/png' => '.png',
+                    'image/webp' => '.webp',
+                };
+                $coverName = 'cover_' . bin2hex(random_bytes(8)) . $ext;
+            }
 
             $songDest = __DIR__ . '/../songs_private/' . $songName;
             $previewDest = __DIR__ . '/../previews/' . $previewName;
+            $coverDest = $hasCover ? __DIR__ . '/../assets/covers/' . $coverName : null;
+
+            // Ensure covers directory exists
+            if ($hasCover && !is_dir(dirname($coverDest))) {
+                mkdir(dirname($coverDest), 0755, true);
+            }
 
             if (!move_uploaded_file($songFile['tmp_name'], $songDest)) {
                 $error = 'Failed to store full MP3.';
             } elseif (!move_uploaded_file($previewFile['tmp_name'], $previewDest)) {
                 $error = 'Failed to store preview MP3.';
+            } elseif ($hasCover && !move_uploaded_file($coverFile['tmp_name'], $coverDest)) {
+                 $error = 'Failed to store cover image.';
             } else {
                 $stmt = db()->prepare(
-                    'INSERT INTO songs (title, artist, price, file_path, preview_path) VALUES (?, ?, ?, ?, ?)'
+                    'INSERT INTO songs (title, artist, price, file_path, preview_path, cover_path) VALUES (?, ?, ?, ?, ?, ?)'
                 );
-                $stmt->execute([$title, $artist, $price, $songName, $previewName]);
+                $stmt->execute([$title, $artist, $price, $songName, $previewName, $coverName]);
                 $success = 'Upload complete.';
             }
         }
@@ -83,6 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label>
                 Full MP3 File
                 <input type="file" name="song" accept=".mp3,audio/mpeg" required>
+            </label>
+            <label>
+                Cover Image (Optional)
+                <input type="file" name="cover" accept="image/jpeg,image/png,image/webp">
             </label>
             <label>
                 30-second Preview MP3
