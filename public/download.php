@@ -50,7 +50,9 @@ db()->prepare('UPDATE purchases SET downloads_count = downloads_count + 1 WHERE 
     ->execute([(int)$purchase['id']]);
 
 header('Content-Type: audio/mpeg');
-header('Content-Disposition: attachment; filename="' . basename($purchase['title']) . '.mp3"');
+$safeName = preg_replace('/[^a-zA-Z0-9_-]+/', '_', $purchase['title']);
+$safeName = $safeName !== '' ? $safeName : 'track';
+header('Content-Disposition: attachment; filename="' . $safeName . '.mp3"');
 header('Content-Length: ' . filesize($filePath));
 readfile($filePath);
 exit;
