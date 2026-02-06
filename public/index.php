@@ -34,12 +34,12 @@ $songs = db()->query('SELECT id, title, artist, price, preview_path FROM songs O
                         <h2><?= htmlspecialchars($song['title']) ?></h2>
                         <p class="muted"><?= htmlspecialchars($song['artist']) ?></p>
                         <audio controls preload="none">
-                            <source src="/public/preview.php?song_id=<?= (int)$song['id'] ?>" type="audio/mpeg">
+                            <source src="preview.php?song_id=<?= (int)$song['id'] ?>" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
                         <div class="card-footer">
                             <span class="price">$<?= number_format((float)$song['price'], 2) ?></span>
-                            <a class="btn" href="/public/buy.php?song_id=<?= (int)$song['id'] ?>">Buy & Download</a>
+                            <a class="btn" href="buy.php?song_id=<?= (int)$song['id'] ?>">Buy & Download</a>
                         </div>
                     </article>
                 <?php endforeach; ?>
