@@ -6,7 +6,7 @@ declare(strict_types=1);
  */
 function format_price(float $price): string
 {
-    return '$' . number_format($price, 2);
+    return 'R' . number_format($price, 2);
 }
 
 /**

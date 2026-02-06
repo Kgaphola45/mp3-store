@@ -36,18 +36,18 @@ $stmt->execute([$songId, $customerId, $token, $expiresAt, 3]);
 <head>
     <meta charset="utf-8">
     <title>Purchase Complete - MP3 Store</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <main class="container narrow">
         <h1>Purchase Complete</h1>
         <div class="card" style="text-align: center;">
             <?php if ($song['cover_path']): ?>
-                <img src="/assets/covers/<?= htmlspecialchars($song['cover_path']) ?>" alt="Cover Art" style="width:200px; border-radius: 8px; margin-bottom: 1rem;">
+                <img src="../assets/covers/<?= htmlspecialchars($song['cover_path']) ?>" alt="Cover Art" style="width:200px; border-radius: 8px; margin-bottom: 1rem;">
             <?php endif; ?>
             <h2><?= htmlspecialchars($song['title']) ?></h2>
             <p class="muted"><?= htmlspecialchars($song['artist']) ?></p>
-            <p class="price">$<?= number_format((float)$song['price'], 2) ?></p>
+            <p class="price">R<?= number_format((float)$song['price'], 2) ?></p>
             <p class="muted">Your download link is valid for 24 hours and up to 3 downloads.</p>
             <a class="btn" href="download.php?token=<?= htmlspecialchars($token) ?>">Download MP3</a>
         </div>

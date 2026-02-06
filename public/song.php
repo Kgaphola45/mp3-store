@@ -23,7 +23,7 @@ if (!$song) {
 <head>
     <meta charset="utf-8">
     <title><?= htmlspecialchars($song['title']) ?> - MP3 Store</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <main class="container">
@@ -34,7 +34,7 @@ if (!$song) {
         <div class="card" style="display: flex; gap: 2rem; align-items: flex-start; padding: 2rem;">
             <div style="flex: 0 0 300px;">
                 <?php if ($song['cover_path']): ?>
-                    <img src="/assets/covers/<?= htmlspecialchars($song['cover_path']) ?>" alt="Cover Art" style="width:100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <img src="../assets/covers/<?= htmlspecialchars($song['cover_path']) ?>" alt="Cover Art" style="width:100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 <?php else: ?>
                     <div style="width:100%; height:300px; background:#eee; display:flex; align-items:center; justify-content:center; border-radius: 8px;">
                         <span class="muted">No Cover</span>
@@ -45,7 +45,7 @@ if (!$song) {
             <div style="flex: 1;">
                 <h1><?= htmlspecialchars($song['title']) ?></h1>
                 <h2 class="muted"><?= htmlspecialchars($song['artist']) ?></h2>
-                <p class="price" style="font-size: 1.5rem; margin: 1rem 0;">$<?= number_format((float)$song['price'], 2) ?></p>
+                <p class="price" style="font-size: 1.5rem; margin: 1rem 0;">R<?= number_format((float)$song['price'], 2) ?></p>
                 
                 <div style="margin: 2rem 0;">
                     <p><strong>Preview:</strong></p>

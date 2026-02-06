@@ -17,7 +17,7 @@ function is_admin(): bool
 function require_admin(): void
 {
     if (!is_admin()) {
-        header('Location: /admin/login.php');
+        header('Location: /public/admin/login.php');
         exit;
     }
 }
