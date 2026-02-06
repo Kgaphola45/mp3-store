@@ -46,9 +46,9 @@ $stmt->execute([$songId, $customerId, $token, $expiresAt, 3]);
             <p class="muted"><?= htmlspecialchars($song['artist']) ?></p>
             <p class="price">$<?= number_format((float)$song['price'], 2) ?></p>
             <p class="muted">Your download link is valid for 24 hours and up to 3 downloads.</p>
-            <a class="btn" href="/public/download.php?token=<?= htmlspecialchars($token) ?>">Download MP3</a>
+            <a class="btn" href="download.php?token=<?= htmlspecialchars($token) ?>">Download MP3</a>
         </div>
-        <p><a class="btn ghost" href="/public/index.php">Back to Store</a></p>
+        <p><a class="btn ghost" href="index.php">Back to Store</a></p>
     </main>
 </body>
 </html>
