@@ -1,0 +1,31 @@
+CREATE DATABASE IF NOT EXISTS mp3_store CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE mp3_store;
+
+CREATE TABLE admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE songs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    artist VARCHAR(200) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    preview_path VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE purchases (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    song_id INT NOT NULL,
+    customer_id VARCHAR(64) NOT NULL,
+    download_token VARCHAR(64) NOT NULL UNIQUE,
+    token_expires_at DATETIME NOT NULL,
+    max_downloads INT NOT NULL DEFAULT 3,
+    downloads_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE
+);
