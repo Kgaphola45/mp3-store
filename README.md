@@ -1,1 +1,1 @@
-# mp3-store
+MP3 Store Platform
