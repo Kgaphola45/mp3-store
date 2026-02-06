@@ -11,7 +11,7 @@ if ($songId <= 0) {
     exit;
 }
 
-$stmt = db()->prepare('SELECT id, title, artist, price FROM songs WHERE id = ?');
+$stmt = db()->prepare('SELECT id, title, artist, price, cover_path FROM songs WHERE id = ?');
 $stmt->execute([$songId]);
 $song = $stmt->fetch();
 
@@ -41,7 +41,10 @@ $stmt->execute([$songId, $customerId, $token, $expiresAt, 3]);
 <body>
     <main class="container narrow">
         <h1>Purchase Complete</h1>
-        <div class="card">
+        <div class="card" style="text-align: center;">
+            <?php if ($song['cover_path']): ?>
+                <img src="/assets/covers/<?= htmlspecialchars($song['cover_path']) ?>" alt="Cover Art" style="width:200px; border-radius: 8px; margin-bottom: 1rem;">
+            <?php endif; ?>
             <h2><?= htmlspecialchars($song['title']) ?></h2>
             <p class="muted"><?= htmlspecialchars($song['artist']) ?></p>
             <p class="price">$<?= number_format((float)$song['price'], 2) ?></p>
