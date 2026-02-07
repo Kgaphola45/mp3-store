@@ -41,7 +41,17 @@ foreach ($privateFiles as $filePath) {
     // Let's list previews to see if we can match
     // Strategy: Just insert it with a placeholder preview path if exact match not found
     
-    $previewPath = 'demo_preview.mp3'; // Default fallback
+    // Check for matching preview in previews directory
+    $possiblePreview = __DIR__ . '/previews/' . $filename;
+    if (file_exists($possiblePreview)) {
+        $previewPath = $filename;
+    } else {
+        // Try looking for the preview with the hash if it's a hashed filename
+        // But for now, fallback to the file itself if we can't find a dedicated preview?
+        // Actually, if no preview exists, we might want to use a default or just point to the same file if it's public (but songs_private is private).
+        // Let's stick to 'demo_preview.mp3' if not found, OR better, let's try to see if there is a 'preview_' version.
+        $previewPath = 'demo_preview.mp3'; 
+    }
     
     // Insert
     $price = 0.99; // Default price
