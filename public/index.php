@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 $search = trim($_GET['q'] ?? '');
 $sql = 'SELECT id, title, artist, price, preview_path, cover_path FROM songs';
@@ -55,10 +56,14 @@ $songs = $songs->fetchAll();
                             <a href="song.php?id=<?= $song['id'] ?>">
                                 <img src="/assets/covers/<?= htmlspecialchars($song['cover_path']) ?>" alt="Cover Art" style="width:100%; height:auto; display:block; border-radius: 4px 4px 0 0;">
                             </a>
-                        <?php else: ?>
-                            <div style="width:100%; height:200px; background:#eee; display:flex; align-items:center; justify-content:center; border-radius: 4px 4px 0 0;">
-                                <span class="muted">No Cover</span>
-                            </div>
+                        <?php else: 
+                            $art = get_cover_art_data($song['title'], $song['artist']);
+                        ?>
+                            <a href="song.php?id=<?= $song['id'] ?>">
+                                <div style="width:100%; height:200px; background:<?= $art['background'] ?>; display:flex; align-items:center; justify-content:center; border-radius: 4px 4px 0 0; color: white;">
+                                    <span style="font-size: 3rem; font-weight: 700; opacity: 0.5; letter-spacing: -2px;"><?= htmlspecialchars($art['text']) ?></span>
+                                </div>
+                            </a>
                         <?php endif; ?>
                         <div style="padding: 1rem;">
                             <h2><a href="song.php?id=<?= $song['id'] ?>"><?= htmlspecialchars($song['title']) ?></a></h2>

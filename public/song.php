@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $song = null;
@@ -33,9 +34,11 @@ if (!$song) {
             <div style="flex: 1; min-width: 300px;">
                 <?php if ($song['cover_path']): ?>
                     <img src="../assets/covers/<?= htmlspecialchars($song['cover_path']) ?>" alt="Cover Art" style="width:100%; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                <?php else: ?>
-                    <div style="width:100%; aspect-ratio: 1; background: linear-gradient(135deg, #334155, #1e293b); display:flex; align-items:center; justify-content:center; border-radius: 16px;">
-                        <span class="muted">No Cover</span>
+                <?php else: 
+                    $art = get_cover_art_data($song['title'], $song['artist']);
+                ?>
+                    <div style="width:100%; aspect-ratio: 1; background: <?= $art['background'] ?>; display:flex; align-items:center; justify-content:center; border-radius: 16px; color: white;">
+                         <span style="font-size: 8rem; font-weight: 700; opacity: 0.5; letter-spacing: -4px;"><?= htmlspecialchars($art['text']) ?></span>
                     </div>
                 <?php endif; ?>
             </div>
