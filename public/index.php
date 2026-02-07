@@ -4,7 +4,19 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 
-$songs = db()->query('SELECT id, title, artist, price, preview_path, cover_path FROM songs ORDER BY created_at DESC')->fetchAll();
+$search = trim($_GET['q'] ?? '');
+$sql = 'SELECT id, title, artist, price, preview_path, cover_path FROM songs';
+$params = [];
+
+if ($search !== '') {
+    $sql .= ' WHERE title LIKE ? OR artist LIKE ?';
+    $params = ["%$search%", "%$search%"];
+}
+
+$sql .= ' ORDER BY created_at DESC';
+$songs = db()->prepare($sql);
+$songs->execute($params);
+$songs = $songs->fetchAll();
 ?>
 <!doctype html>
 <html lang="en">
@@ -25,11 +37,15 @@ $songs = db()->query('SELECT id, title, artist, price, preview_path, cover_path 
         
         <header class="page-header">
             <h2>Latest Drops</h2>
+            <form method="get" action="" style="display:flex; gap:10px; max-width:400px;">
+                <input type="text" name="q" placeholder="Search artist or track..." value="<?= htmlspecialchars($search) ?>" style="margin-bottom:0;">
+                <button type="submit" class="btn small">Search</button>
+            </form>
         </header>
 
         <?php if (!$songs): ?>
             <div class="card">
-                <p class="muted">No tracks available yet.</p>
+                <p class="muted">No tracks found matching your criteria.</p>
             </div>
         <?php else: ?>
             <div class="grid">

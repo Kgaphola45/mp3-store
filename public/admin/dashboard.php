@@ -7,6 +7,11 @@ require_once __DIR__ . '/../../includes/auth.php';
 require_admin();
 
 $songs = db()->query('SELECT id, title, artist, price, created_at FROM songs ORDER BY created_at DESC')->fetchAll();
+
+// Analytics
+$totalSongs = count($songs);
+$totalSalesCount = db()->query('SELECT COUNT(*) FROM purchases')->fetchColumn();
+$totalRevenue = db()->query('SELECT SUM(s.price) FROM purchases p JOIN songs s ON p.song_id = s.id')->fetchColumn() ?? 0;
 ?>
 <!doctype html>
 <html lang="en">
@@ -24,6 +29,21 @@ $songs = db()->query('SELECT id, title, artist, price, created_at FROM songs ORD
             </div>
             <a class="btn" href="upload.php">Upload New Track</a>
         </header>
+
+        <section class="grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
+            <div class="card" style="text-align: center;">
+                <h3 class="muted" style="font-size: 0.9rem; margin-bottom: 0.5rem;">CATALOG SIZE</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; margin: 0;"><?= $totalSongs ?></p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3 class="muted" style="font-size: 0.9rem; margin-bottom: 0.5rem;">TOTAL SALES</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; margin: 0;"><?= $totalSalesCount ?></p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3 class="muted" style="font-size: 0.9rem; margin-bottom: 0.5rem;">REVENUE</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; margin: 0; color: var(--success);">R<?= number_format((float)$totalRevenue, 2) ?></p>
+            </div>
+        </section>
 
         <section class="card">
             <h2>Catalog</h2>
